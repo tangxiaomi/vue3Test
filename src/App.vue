@@ -1,21 +1,23 @@
 <template>
-  <div>{{nowTime}}</div>
-  <div><button @click="getNowTime">显示时间</button></div>
+  <div>
+    <h2>欢迎来到博学课堂</h2>
+    <div>请随机挑选一位资深教师~</div>
+    <div v-if="loading">loading...</div>
+    <img v-if="loaded" :src="result.imgUrl" alt="">
+  </div>
 </template>
 
 <script lang="ts">
+
 import { ref} from 'vue'; // 引入ref, reactive
-import { nowTime, getNowTime } from './hooks/useNowTime';
-interface DataProps{  // 人为定义类型 就是类型注解,不需要ts去自己类型推断
-  teachers: string[];
-  selectTeacher: string;
-  selectTeacherFun: (index: number) => void;
-}
+import useURLAxios from './hooks/useURLAxios';
+
 
 export default{
   name: 'App',
   setup(){
-    return {nowTime,getNowTime} // 因为需要在模块中使用 所以仍然是需要return的
+    const {result, loading, loaded, error} = useURLAxios('https://apiblog.jspang.com/default/getGirl');
+    return {result, loading, loaded, error};
   }
 };
 </script>
