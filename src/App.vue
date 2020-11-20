@@ -1,26 +1,35 @@
 <template>
   <div>
-    <h2>欢迎来到博学课堂</h2>
-    <div>请随机挑选一位资深教师~</div>
-    <div v-if="loading">loading...</div>
-    <modal></modal>
-    <img v-if="loaded" :src="result.imgUrl" alt="">
+    <Suspense>
+      <!-- 正常请求的结果 -->
+      <template #default>
+        <!-- <AsyncShow/> -->
+        <girl-show/>
+      </template>
+      <!-- 请求有误的结果 -->
+      <template #fallback>
+        <h1>Loading...</h1>
+      </template>
+    </Suspense>
   </div>
 </template>
 
 <script lang="ts">
 
-import { ref} from 'vue'; // 引入ref, reactive
-import useURLAxios from './hooks/useURLAxios';
-import modal from './components/ModalVue.vue';
+import { ref, onErrorCaptured } from 'vue'; // 引入ref, reactive
+// import AsyncShow from './components/AsyncShow.vue';
+import GirlShow from './components/GirlShow.vue';
 
 
 export default{
   name: 'App',
-  components: {modal}, // 注册这个组件
+  components: { GirlShow },
   setup(){
-    const {result, loading, loaded, error} = useURLAxios('https://apiblog.jspang.com/default/getGirl');
-    return {result, loading, loaded, error};
+     onErrorCaptured((error) => {
+      console.log(`error====>`,error)
+      return true  
+    })
+    return {}
   }
 };
 </script>
